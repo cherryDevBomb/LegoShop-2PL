@@ -1,4 +1,4 @@
-package com.ubb.legoshop.config;
+package com.ubb.legoshop.persistence.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.ubb.legoshop.repository.customers",
+        basePackages = "com.ubb.legoshop.persistence.repository.customers",
         entityManagerFactoryRef = "customersEntityManagerFactory",
         transactionManagerRef = "customersTransactionManager"
 )
@@ -51,7 +51,7 @@ public class CustomersDatasourceConfig {
         EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(jpaVendorAdapter, customersJpaProperties.getProperties(), null);
 
         return builder.dataSource(customersDataSource)
-                .packages("com.ubb.legoshop.domain.customers")
+                .packages("com.ubb.legoshop.persistence.domain.customers")
                 .persistenceUnit("customers")
                 .build();
     }

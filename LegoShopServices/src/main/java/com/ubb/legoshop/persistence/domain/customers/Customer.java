@@ -1,4 +1,4 @@
-package com.ubb.legoshop.domain.customers;
+package com.ubb.legoshop.persistence.domain.customers;
 
 import lombok.Data;
 
