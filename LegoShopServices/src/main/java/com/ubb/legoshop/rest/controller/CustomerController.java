@@ -1,22 +1,22 @@
 package com.ubb.legoshop.rest.controller;
 
-import com.ubb.legoshop.persistence.repository.customers.CustomerRepository;
-import com.ubb.legoshop.rest.model.CustomerRequestModel;
+import com.ubb.legoshop.persistence.domain.customers.Customer;
+import com.ubb.legoshop.scheduler.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/customers")
 public class CustomerController {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @PostMapping
-    public void createCustomer(@RequestBody CustomerRequestModel customerRequestModel) {
-
+    public void createCustomer(@RequestBody Customer customer) {
+        customerService.createCustomer(customer);
     }
 }
