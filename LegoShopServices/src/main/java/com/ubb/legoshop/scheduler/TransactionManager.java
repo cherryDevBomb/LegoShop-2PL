@@ -1,5 +1,6 @@
 package com.ubb.legoshop.scheduler;
 
+import com.ubb.legoshop.scheduler.model.DirectedGraph;
 import com.ubb.legoshop.scheduler.model.Lock;
 import com.ubb.legoshop.scheduler.model.Transaction;
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
@@ -11,44 +12,25 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
 @Slf4j
 public class TransactionManager {
 
-    private final BlockingQueue<Transaction> transactionQueue = new LinkedBlockingQueue<>();
+    private final List<Transaction> transactions = new LinkedList<>();
     private final List<Lock> locks = new LinkedList<>();
-
-//    @PostConstruct
-//    public void start() {
-//        Executors.newSingleThreadExecutor().execute(() -> {
-//            while (true) {
-//                try {
-////                    Operation<?, ?> op = operationQueue.take();
-////                    System.out.println(op.getResourceTable().toString());
-//                    Transaction t = transactionQueue.take();
-//                    for ( Operation<?> op : t.getOperations()) {
-//                        System.out.println(op.getResourceTable().toString() + " " + Thread.currentThread().getName());
-//                    }
-//                } catch (InterruptedException e) {
-//                    log.error("Error processing operation.");
-//                }
-//            }
-//        });
-//    }
+    private final DirectedGraph waitForGraph = new DirectedGraph();
 
     public void executeTransaction(Transaction transaction) {
         System.out.println(Thread.currentThread().getName());
-        addTransaction(transaction); // TODO think if maybe a list is better
+        addTransaction(transaction);
 
         for (Operation<?> op : transaction.getOperations()) {
             boolean lockAcquired = waitAndAcquireLock(op, transaction);
             if (lockAcquired) {
                 op.execute();
             } else {
-                // deadlock was detected -> rollback
+                // deadlock was detected -> rollback all executed operations
                 int currentOpIndex = transaction.getOperations().indexOf(op);
                 for (int i = currentOpIndex - 1; i >= 0; i--) {
                     transaction.getOperations().get(currentOpIndex).executeCompensation();
@@ -70,20 +52,23 @@ public class TransactionManager {
             synchronized (locks) {
                 Lock existingLock = getLockIfExists(op.getResourceTable(), op.getResourceId());
                 while (existingLock != null) {
-                    // 2 read locks on the same resource are allowed
+                    // 2 read locks on the same resource are allowed -> can acquire lock
                     if (existingLock.getType() == OperationType.READ && op.getType() == OperationType.READ) {
                         existingLock.getTransactionHasLockIds().add(transaction.getUuid());
                         return true;
                     } else {
-                        // an incompatible lock exists
-
-                        // TODO add to graph, check if causes cycle
-                        boolean hasCycle = false;
-                        if (hasCycle) {
-                            // remove transaction and edge from graph
+                        // an incompatible lock exists -> wait for lock to become available
+                        waitForGraph.addNodeIfNotPresent(transaction.getUuid());
+                        for (String lockHoldingTransaction : existingLock.getTransactionHasLockIds()) {
+                            waitForGraph.addEdge(transaction.getUuid(), lockHoldingTransaction);
+                        }
+                        if (waitForGraph.isCyclic()) {
+                            // return false will cause rollback for the transaction that added the last edge,
+                            // causing the wait for graph to become cyclic
                             return false;
                         }
 
+                        // if no deadlock is caused, wait until the existing lock gets released
                         locks.wait();
                     }
                     existingLock = getLockIfExists(op.getResourceTable(), op.getResourceId());
@@ -104,9 +89,7 @@ public class TransactionManager {
                 lock.getTransactionHasLockIds().remove(transaction.getUuid());
             }
             locks.removeIf(lock -> lock.getTransactionHasLockIds().size() == 0);
-
-            //TODO remove transaction from wait-for graph vertices
-
+            waitForGraph.removeNode(transaction.getUuid());
             locks.notify();
         }
     }
@@ -123,7 +106,7 @@ public class TransactionManager {
     }
 
     private synchronized void addTransaction(Transaction transaction) {
-        transactionQueue.add(transaction);
+        transactions.add(transaction);
     }
 
     private void acquireLock(Operation<?> op, Transaction transaction) {

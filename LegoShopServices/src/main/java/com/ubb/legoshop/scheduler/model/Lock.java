@@ -18,7 +18,6 @@ public class Lock {
     private Table resourceTable;
     private Long resourceId;
     private List<String> transactionHasLockIds;
-    private List<String> waitingTransactionIds;
 
     public Lock(OperationType type, Table resourceTable, Long resourceId) {
         this.type = type;
@@ -27,6 +26,5 @@ public class Lock {
 
         this.uuid = UUID.randomUUID().toString();
         this.transactionHasLockIds = new ArrayList<>();
-        this.waitingTransactionIds = new ArrayList<>();
     }
 }
