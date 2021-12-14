@@ -1,4 +1,4 @@
-package com.ubb.legoshop.scheduler.model;
+package com.ubb.legoshop.scheduler.model.management;
 
 import com.ubb.legoshop.scheduler.model.enums.TransactionStatus;
 import com.ubb.legoshop.scheduler.model.operation.Operation;

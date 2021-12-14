@@ -1,8 +1,8 @@
 package com.ubb.legoshop.scheduler;
 
-import com.ubb.legoshop.scheduler.model.DirectedGraph;
-import com.ubb.legoshop.scheduler.model.Lock;
-import com.ubb.legoshop.scheduler.model.Transaction;
+import com.ubb.legoshop.scheduler.model.management.DirectedGraph;
+import com.ubb.legoshop.scheduler.model.management.Lock;
+import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.enums.TransactionStatus;

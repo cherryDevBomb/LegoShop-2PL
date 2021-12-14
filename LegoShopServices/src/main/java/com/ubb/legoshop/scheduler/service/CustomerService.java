@@ -3,7 +3,7 @@ package com.ubb.legoshop.scheduler.service;
 import com.ubb.legoshop.persistence.domain.customers.Customer;
 import com.ubb.legoshop.persistence.repository.customers.CustomerRepository;
 import com.ubb.legoshop.scheduler.TransactionManager;
-import com.ubb.legoshop.scheduler.model.Transaction;
+import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.enums.TransactionStatus;
 import com.ubb.legoshop.scheduler.model.operation.InsertOperation;
