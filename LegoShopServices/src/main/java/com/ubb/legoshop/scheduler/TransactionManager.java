@@ -28,14 +28,18 @@ public class TransactionManager {
         for (Operation<?> op : transaction.getOperations()) {
             boolean lockAcquired = waitAndAcquireLock(op, transaction);
             if (lockAcquired) {
-                op.execute();
+                try {
+                    op.execute();
+                } catch (Exception e) {
+                    log.error("Rollback transaction {} due to error: {}", transaction.getUuid(), e.getMessage());
+                    rollbackTransaction(transaction, transaction.getOperations().indexOf(op) - 1);
+                    transaction.setStatus(TransactionStatus.ERROR);
+                    return;
+                }
             } else {
                 // deadlock was detected -> rollback all executed operations
-                int currentOpIndex = transaction.getOperations().indexOf(op);
-                for (int i = currentOpIndex - 1; i >= 0; i--) {
-                    transaction.getOperations().get(currentOpIndex).executeCompensation();
-                }
-                releaseLocks(transaction);
+                log.warn("Deadlock detected! Rollback transaction {}", transaction.getUuid());
+                rollbackTransaction(transaction, transaction.getOperations().indexOf(op) - 1);
                 transaction.setStatus(TransactionStatus.ABORTED);
                 return;
             }
@@ -52,8 +56,14 @@ public class TransactionManager {
             synchronized (locks) {
                 Lock existingLock = getLockIfExists(op.getResourceTable(), op.getResourceId());
                 while (existingLock != null) {
-                    // 2 read locks on the same resource are allowed -> can acquire lock
-                    if (existingLock.getType() == OperationType.READ && op.getType() == OperationType.READ) {
+                    if (existingLock.getType().equals(op.getType()) && existingLock.getTransactionHasLockIds().contains(transaction.getUuid())) {
+                        // transaction already has this lock
+                        return true;
+                    } else if (existingLock.getTransactionHasLockIds().contains(transaction.getUuid())) {
+                        // existing lock is of another type, but belongs to the same transaction -> this will not cause deadlock
+                        break;
+                    } else if (existingLock.getType() == OperationType.READ && op.getType() == OperationType.READ) {
+                        // 2 read locks on the same resource are allowed -> can acquire lock
                         existingLock.getTransactionHasLockIds().add(transaction.getUuid());
                         return true;
                     } else {
@@ -83,17 +93,6 @@ public class TransactionManager {
         }
     }
 
-    private void releaseLocks(Transaction transaction) {
-        synchronized(locks) {
-            for (Lock lock : locks) {
-                lock.getTransactionHasLockIds().remove(transaction.getUuid());
-            }
-            locks.removeIf(lock -> lock.getTransactionHasLockIds().size() == 0);
-            waitForGraph.removeNode(transaction.getUuid());
-            locks.notify();
-        }
-    }
-
     // search the locks list for an existing lock for the given table and record id;
     // resourceId will be null when the whole table needs to be locked, i.e. for a getAll operation
     // return null if not found
@@ -105,14 +104,31 @@ public class TransactionManager {
                 .orElse(null);
     }
 
-    private synchronized void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-    }
-
     private void acquireLock(Operation<?> op, Transaction transaction) {
         Lock lock = new Lock(op.getType(), op.getResourceTable(), op.getResourceId());
         lock.getTransactionHasLockIds().add(transaction.getUuid());
         locks.add(lock);
     }
 
+    private void rollbackTransaction(Transaction transaction, int lastExecutedOpIndex) {
+        for (int i = lastExecutedOpIndex; i >= 0; i--) {
+            transaction.getOperations().get(lastExecutedOpIndex).executeCompensation();
+        }
+        releaseLocks(transaction);
+    }
+
+    private void releaseLocks(Transaction transaction) {
+        synchronized(locks) {
+            for (Lock lock : locks) {
+                lock.getTransactionHasLockIds().remove(transaction.getUuid());
+            }
+            locks.removeIf(lock -> lock.getTransactionHasLockIds().size() == 0);
+            waitForGraph.removeNode(transaction.getUuid());
+            locks.notify();
+        }
+    }
+
+    private synchronized void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
 }

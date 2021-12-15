@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public abstract class Operation<T> {
 
     protected OperationType type;
-    protected boolean executed;
+    protected boolean executed; // TODO reevaluate if needed
 
     protected Table resourceTable;
     protected Long resourceId;
@@ -21,5 +21,5 @@ public abstract class Operation<T> {
     protected T compensationParameter;
 
     public abstract T execute();
-    public abstract T executeCompensation();
+    public abstract void executeCompensation();
 }

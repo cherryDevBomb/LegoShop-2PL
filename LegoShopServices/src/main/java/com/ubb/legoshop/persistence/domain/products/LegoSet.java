@@ -1,12 +1,14 @@
 package com.ubb.legoshop.persistence.domain.products;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "legoSet")
+@Table(name = "legoset")
 @Data
+@NoArgsConstructor
 public class LegoSet {
 
     @Id
@@ -26,12 +28,19 @@ public class LegoSet {
     @Column(name = "pieces_count", nullable = false)
     private int piecesCount;
 
-    @Column(name = "likes_count", nullable = false)
-    private int likesCount;
-
     @Column(name = "available_units", nullable = false)
     private int availableUnits;
 
     @Column(name = "price", nullable = false)
     private double price;
+
+    public LegoSet(LegoSet other) {
+        this.id = other.id;
+        this.uniqueSetId = other.uniqueSetId;
+        this.setName = other.setName;
+        this.category = other.category;
+        this.piecesCount = other.piecesCount;
+        this.availableUnits = other.availableUnits;
+        this.price = other.price;
+    }
 }

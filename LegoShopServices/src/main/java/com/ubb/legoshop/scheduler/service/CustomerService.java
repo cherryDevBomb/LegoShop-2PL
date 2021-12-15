@@ -2,10 +2,8 @@ package com.ubb.legoshop.scheduler.service;
 
 import com.ubb.legoshop.persistence.domain.customers.Customer;
 import com.ubb.legoshop.persistence.repository.customers.CustomerRepository;
-import com.ubb.legoshop.scheduler.TransactionManager;
-import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.enums.Table;
-import com.ubb.legoshop.scheduler.model.enums.TransactionStatus;
+import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.InsertOperation;
 import com.ubb.legoshop.scheduler.model.operation.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
     @Autowired
-    private TransactionManager transactionManager;
+    private ServiceHelper serviceHelper;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -31,9 +29,6 @@ public class CustomerService {
         Transaction transaction = new Transaction()
                 .addOperation(insertCustomerOp);
 
-        // send transaction to scheduler for execution
-        while (!TransactionStatus.COMMITTED.equals(transaction.getStatus())) {
-            transactionManager.executeTransaction(transaction);
-        }
+        serviceHelper.sendTransactionToScheduler(transaction);
     }
 }

@@ -17,8 +17,7 @@ public class InsertOperation<T> extends Operation<T> {
     }
 
     @Override
-    public T executeCompensation() {
+    public void executeCompensation() {
         jpaRepository.delete(compensationParameter);
-        return compensationParameter;
     }
 }
