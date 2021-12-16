@@ -14,7 +14,7 @@ public class GetByIdOperation<T> extends Operation<T> {
 
     @Override
     public T execute() {
-        getResult = jpaRepository.getById(resourceId);
+        getResult = repository.getById(resourceId);
         this.executed = true;
         return getResult;
     }

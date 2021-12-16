@@ -1,6 +1,6 @@
 package com.ubb.legoshop.rest.controller;
 
-import com.ubb.legoshop.persistence.domain.customers.Customer;
+import com.ubb.legoshop.persistence.domain.Customer;
 import com.ubb.legoshop.scheduler.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

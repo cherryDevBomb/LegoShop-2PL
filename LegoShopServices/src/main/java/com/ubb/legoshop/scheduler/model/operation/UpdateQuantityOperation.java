@@ -1,6 +1,7 @@
 package com.ubb.legoshop.scheduler.model.operation;
 
-import com.ubb.legoshop.persistence.domain.products.LegoSet;
+import com.ubb.legoshop.persistence.domain.LegoSet;
+import com.ubb.legoshop.persistence.repository.LegoSetRepository;
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
 import lombok.Setter;
 
@@ -21,14 +22,14 @@ public class UpdateQuantityOperation extends Operation<LegoSet> {
             throw new RuntimeException("Not enough available units to process order.");
         }
 
-        parameter.setAvailableUnits(parameter.getAvailableUnits() + orderQuantityValue);
-        LegoSet result = jpaRepository.save(parameter);
+        parameter.setAvailableUnits(parameter.getAvailableUnits() - orderQuantityValue);
+        ((LegoSetRepository) repository).update(parameter);
         this.executed = true;
-        return result;
+        return parameter;
     }
 
     @Override
     public void executeCompensation() {
-        jpaRepository.save(compensationParameter);
+        ((LegoSetRepository) repository).update(compensationParameter);
     }
 }

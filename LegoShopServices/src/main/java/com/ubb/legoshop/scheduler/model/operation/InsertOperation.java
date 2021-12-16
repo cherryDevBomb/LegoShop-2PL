@@ -10,7 +10,7 @@ public class InsertOperation<T> extends Operation<T> {
 
     @Override
     public T execute() {
-        T result = jpaRepository.save(parameter);
+        T result = repository.add(parameter);
         this.executed = true;
         this.compensationParameter = result; // result will contain the generated id which is necessary on delete
         return result;
@@ -18,6 +18,6 @@ public class InsertOperation<T> extends Operation<T> {
 
     @Override
     public void executeCompensation() {
-        jpaRepository.delete(compensationParameter);
+        repository.delete(compensationParameter);
     }
 }

@@ -14,14 +14,3 @@ app:
       username: root
       password: toor
       driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    customers:
-      hibernate:
-        hbm2ddl:
-          auto: none
-        dialect: org.hibernate.dialect.MySQL5Dialect
-    products:
-      hibernate:
-        hbm2ddl:
-          auto: none
-        dialect: org.hibernate.dialect.MySQL5Dialect
