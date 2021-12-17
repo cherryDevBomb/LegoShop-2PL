@@ -22,7 +22,6 @@ public class TransactionManager {
     private final DirectedGraph waitForGraph = new DirectedGraph();
 
     public void executeTransaction(Transaction transaction) {
-        System.out.println(Thread.currentThread().getName());
         addTransaction(transaction);
 
         for (Operation<?> op : transaction.getOperations()) {

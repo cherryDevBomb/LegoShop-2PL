@@ -7,12 +7,11 @@ import com.ubb.legoshop.persistence.repository.LegoSetRepository;
 import com.ubb.legoshop.persistence.repository.OrderRepository;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
-import com.ubb.legoshop.scheduler.model.operation.FindLegoSetAndCheckStockOperation;
-import com.ubb.legoshop.scheduler.model.operation.GetByIdOperation;
-import com.ubb.legoshop.scheduler.model.operation.InsertOperation;
-import com.ubb.legoshop.scheduler.model.operation.UpdateQuantityOperation;
+import com.ubb.legoshop.scheduler.model.operation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -61,5 +60,20 @@ public class OrderService {
         serviceHelper.sendTransactionToScheduler(transaction);
 
         return insertOrderOp.getParameter();
+    }
+
+    public List<Order> getOrdersForCustomer(Long customerId) {
+        // define the operations that will be part of the transaction
+        GetOrdersForCustomerOperation getOrdersForCustomerOp = new GetOrdersForCustomerOperation();
+        getOrdersForCustomerOp.setRepository(orderRepository);
+        getOrdersForCustomerOp.setCustomerIdParam(customerId);
+
+        // create the transaction
+        Transaction transaction = new Transaction()
+                .addOperation(getOrdersForCustomerOp);
+
+        serviceHelper.sendTransactionToScheduler(transaction);
+
+        return getOrdersForCustomerOp.getResult();
     }
 }
