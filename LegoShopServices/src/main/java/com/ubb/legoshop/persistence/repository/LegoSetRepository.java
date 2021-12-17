@@ -23,6 +23,7 @@ public class LegoSetRepository implements AbstractRepository<LegoSet> {
     private LegoSetMapper legoSetMapper;
 
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM legoset WHERE id = :id";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM legoset";
     private static final String UPDATE_QUERY = "UPDATE legoset SET available_units = available_units - :order_quantity WHERE id = :id";
 
     @Override
@@ -37,7 +38,7 @@ public class LegoSetRepository implements AbstractRepository<LegoSet> {
 
     @Override
     public List<LegoSet> getAll() {
-        return null;
+        return jdbcTemplate.query(FIND_ALL_QUERY, legoSetMapper);
     }
 
     @Override
@@ -47,7 +48,6 @@ public class LegoSetRepository implements AbstractRepository<LegoSet> {
 
     @Override
     public void delete(LegoSet entity) {
-
     }
 
     public void update(Long id, int orderQuantity) {

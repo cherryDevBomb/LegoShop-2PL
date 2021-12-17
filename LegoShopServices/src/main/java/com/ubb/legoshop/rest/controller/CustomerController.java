@@ -25,12 +25,16 @@ public class CustomerController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Customer> loginCustomer(@RequestBody LoginRequestModel loginRequestModel) {
-        Customer result = customerService.loginCustomer(loginRequestModel.getEmail(), loginRequestModel.getPassword());
-        if (result == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            Customer result = customerService.loginCustomer(loginRequestModel.getEmail(), loginRequestModel.getPassword());
+            if (result == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok(result);
     }
 }

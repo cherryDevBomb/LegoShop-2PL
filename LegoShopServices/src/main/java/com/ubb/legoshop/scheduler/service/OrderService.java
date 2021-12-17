@@ -29,7 +29,7 @@ public class OrderService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public void createOrder(Order order) {
+    public Order createOrder(Order order) {
         // define the operations that will be part of the transaction
         GetByIdOperation<Customer> getCustomerByIdOp = new GetByIdOperation<>();
         getCustomerByIdOp.setResourceTable(Table.CUSTOMER);
@@ -59,5 +59,7 @@ public class OrderService {
                 .addOperation(updateAvailableQuantityOp);
 
         serviceHelper.sendTransactionToScheduler(transaction);
+
+        return insertOrderOp.getParameter();
     }
 }

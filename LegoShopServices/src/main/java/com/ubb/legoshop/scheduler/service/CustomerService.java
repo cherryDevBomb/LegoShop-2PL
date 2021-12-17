@@ -32,10 +32,6 @@ public class CustomerService {
 
         serviceHelper.sendTransactionToScheduler(transaction);
 
-        if (TransactionStatus.ERROR.equals(transaction.getStatus())) {
-            throw new RuntimeException("Create customer failed");
-        }
-
         return insertCustomerOp.getParameter();
     }
 
@@ -51,11 +47,9 @@ public class CustomerService {
 
         serviceHelper.sendTransactionToScheduler(transaction);
 
-        if (TransactionStatus.COMMITTED.equals(transaction.getStatus())) {
-            Customer result = findCustomerOp.getResult();
-            if (password.equals(result.getPassword())) {
-                return result;
-            }
+        Customer result = findCustomerOp.getResult();
+        if (password.equals(result.getPassword())) {
+            return result;
         }
         return null;
     }

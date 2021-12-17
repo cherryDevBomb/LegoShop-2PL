@@ -25,7 +25,8 @@ public class OrderRepository implements AbstractRepository<Order> {
     private OrderMapper orderMapper;
 
     private final static String INSERT_QUERY = "INSERT INTO orders(customer_id, legoset_id, created_date) VALUES (:customer_id, :legoset_id, :created_date)";
-
+    private static final String DELETE_QUERY = "DELETE FROM orders WHERE id = :id";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM orders WHERE customer_id = :customer_id";
 
     @Override
     public Order getById(Long id) {
@@ -47,7 +48,13 @@ public class OrderRepository implements AbstractRepository<Order> {
 
     @Override
     public void delete(Order entity) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", entity.getId());
+        jdbcTemplate.update(DELETE_QUERY, parameterSource);
+    }
 
+    public List<Order> getAllByCustomerId(Long customerId) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource("customer_id", customerId);
+        return jdbcTemplate.query(FIND_ALL_QUERY, parameterSource, orderMapper);
     }
 
     private SqlParameterSource getSqlParameterSourceForEntity(Order order) {

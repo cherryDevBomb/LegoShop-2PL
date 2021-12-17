@@ -18,5 +18,9 @@ public class ServiceHelper {
         while (!TransactionStatus.COMMITTED.equals(transaction.getStatus()) && !TransactionStatus.ERROR.equals(transaction.getStatus())) {
             transactionManager.executeTransaction(transaction);
         }
+
+        if (TransactionStatus.ERROR.equals(transaction.getStatus())) {
+            throw new RuntimeException("Transaction failed.");
+        }
     }
 }
