@@ -62,6 +62,32 @@ public class OrderService {
         return insertOrderOp.getParameter();
     }
 
+    public void deleteOrder(Order order) {
+        // define the operations that will be part of the transaction
+        GetByIdOperation<Order> getOrderByIdOp = new GetByIdOperation<>();
+        getOrderByIdOp.setResourceTable(Table.ORDERS);
+        getOrderByIdOp.setRepository(orderRepository);
+        getOrderByIdOp.setResourceId(order.getId());
+
+        DeleteOperation<Order> deleteOrderOp = new DeleteOperation<>();
+        deleteOrderOp.setResourceTable(Table.ORDERS);
+        deleteOrderOp.setRepository(orderRepository);
+        deleteOrderOp.setParameter(order);
+
+        UpdateQuantityOperation updateAvailableQuantityOp = new UpdateQuantityOperation();
+        updateAvailableQuantityOp.setRepository(legoSetRepository);
+        updateAvailableQuantityOp.setResourceId(order.getLegoSetId());
+        updateAvailableQuantityOp.setOrderQuantity(-1);
+
+        // create the transaction
+        Transaction transaction = new Transaction()
+                .addOperation(getOrderByIdOp)
+                .addOperation(deleteOrderOp)
+                .addOperation(updateAvailableQuantityOp);
+
+        serviceHelper.sendTransactionToScheduler(transaction);
+    }
+
     public List<Order> getOrdersForCustomer(Long customerId) {
         // define the operations that will be part of the transaction
         GetOrdersForCustomerOperation getOrdersForCustomerOp = new GetOrdersForCustomerOperation();

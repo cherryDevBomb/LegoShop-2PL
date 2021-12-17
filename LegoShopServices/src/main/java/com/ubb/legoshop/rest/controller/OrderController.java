@@ -1,6 +1,5 @@
 package com.ubb.legoshop.rest.controller;
 
-import com.ubb.legoshop.persistence.domain.LegoSet;
 import com.ubb.legoshop.persistence.domain.Order;
 import com.ubb.legoshop.scheduler.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,16 @@ public class OrderController {
             order.setCreatedDate(LocalDateTime.now());
             Order result = orderService.createOrder(order);
             return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteOrder(@RequestBody Order order) {
+        try {
+            orderService.deleteOrder(order);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

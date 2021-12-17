@@ -4,6 +4,7 @@ import com.ubb.legoshop.persistence.domain.Order;
 import com.ubb.legoshop.persistence.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -26,11 +27,17 @@ public class OrderRepository implements AbstractRepository<Order> {
 
     private final static String INSERT_QUERY = "INSERT INTO orders(customer_id, legoset_id, created_date) VALUES (:customer_id, :legoset_id, :created_date)";
     private static final String DELETE_QUERY = "DELETE FROM orders WHERE id = :id";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM orders WHERE customer_id = :customer_id";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM orders WHERE id = :id";
+    private static final String FIND_ALL_BY_CUSTOMER_ID_QUERY = "SELECT * FROM orders WHERE customer_id = :customer_id";
 
     @Override
     public Order getById(Long id) {
-        return null;
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, parameterSource, orderMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -54,7 +61,7 @@ public class OrderRepository implements AbstractRepository<Order> {
 
     public List<Order> getAllByCustomerId(Long customerId) {
         SqlParameterSource parameterSource = new MapSqlParameterSource("customer_id", customerId);
-        return jdbcTemplate.query(FIND_ALL_QUERY, parameterSource, orderMapper);
+        return jdbcTemplate.query(FIND_ALL_BY_CUSTOMER_ID_QUERY, parameterSource, orderMapper);
     }
 
     private SqlParameterSource getSqlParameterSourceForEntity(Order order) {
