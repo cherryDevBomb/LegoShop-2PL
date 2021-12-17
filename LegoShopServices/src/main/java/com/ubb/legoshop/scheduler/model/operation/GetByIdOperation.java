@@ -1,22 +1,19 @@
 package com.ubb.legoshop.scheduler.model.operation;
 
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
-import lombok.Getter;
 
 public class GetByIdOperation<T> extends Operation<T> {
-
-    @Getter
-    protected T getResult;
 
     public GetByIdOperation() {
         this.type = OperationType.READ;
     }
 
     @Override
-    public T execute() {
-        getResult = repository.getById(resourceId);
-        this.executed = true;
-        return getResult;
+    public void execute() {
+        T getResult = repository.getById(resourceId);
+        if (getResult == null) {
+            throw new RuntimeException("Resource not found.");
+        }
     }
 
     @Override

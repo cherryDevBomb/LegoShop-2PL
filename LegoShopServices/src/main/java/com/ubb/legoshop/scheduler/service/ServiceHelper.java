@@ -13,7 +13,7 @@ public class ServiceHelper {
     private TransactionManager transactionManager;
 
     // send transaction to scheduler for execution
-    // retry until transaction is committed, except if status is error
+    // retry until transaction is committed, or status is error
     public void sendTransactionToScheduler(Transaction transaction) {
         while (!TransactionStatus.COMMITTED.equals(transaction.getStatus()) && !TransactionStatus.ERROR.equals(transaction.getStatus())) {
             transactionManager.executeTransaction(transaction);

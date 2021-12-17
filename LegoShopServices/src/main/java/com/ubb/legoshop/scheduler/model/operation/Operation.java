@@ -11,15 +11,11 @@ import lombok.Setter;
 public abstract class Operation<T> {
 
     protected OperationType type;
-    protected boolean executed; // TODO reevaluate if needed
 
     protected Table resourceTable;
     protected Long resourceId;
     protected AbstractRepository<T> repository;
 
-    protected T parameter;
-    protected T compensationParameter;
-
-    public abstract T execute();
+    public abstract void execute();
     public abstract void executeCompensation();
 }

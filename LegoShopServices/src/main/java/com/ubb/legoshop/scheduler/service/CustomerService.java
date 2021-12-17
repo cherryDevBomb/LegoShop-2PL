@@ -5,7 +5,6 @@ import com.ubb.legoshop.persistence.repository.CustomerRepository;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.InsertOperation;
-import com.ubb.legoshop.scheduler.model.operation.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class CustomerService {
 
     public void createCustomer(Customer customer) {
         // define the operations that will be part of the transaction
-        Operation<Customer> insertCustomerOp = new InsertOperation<>();
+        InsertOperation<Customer> insertCustomerOp = new InsertOperation<>();
         insertCustomerOp.setResourceTable(Table.CUSTOMER);
         insertCustomerOp.setRepository(customerRepository);
         insertCustomerOp.setParameter(customer);

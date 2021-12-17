@@ -1,23 +1,25 @@
 package com.ubb.legoshop.scheduler.model.operation;
 
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
+import lombok.Setter;
 
 public class InsertOperation<T> extends Operation<T> {
+
+    @Setter
+    private T parameter;
 
     public InsertOperation() {
         this.type = OperationType.WRITE;
     }
 
     @Override
-    public T execute() {
+    public void execute() {
         T result = repository.add(parameter);
-        this.executed = true;
-        this.compensationParameter = result; // result will contain the generated id which is necessary on delete
-        return result;
+        this.parameter = result; // result will contain the generated id which is necessary on delete
     }
 
     @Override
     public void executeCompensation() {
-        repository.delete(compensationParameter);
+        repository.delete(parameter);
     }
 }
