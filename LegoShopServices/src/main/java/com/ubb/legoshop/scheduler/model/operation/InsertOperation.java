@@ -1,10 +1,12 @@
 package com.ubb.legoshop.scheduler.model.operation;
 
 import com.ubb.legoshop.scheduler.model.enums.OperationType;
+import lombok.Getter;
 import lombok.Setter;
 
 public class InsertOperation<T> extends Operation<T> {
 
+    @Getter
     @Setter
     private T parameter;
 

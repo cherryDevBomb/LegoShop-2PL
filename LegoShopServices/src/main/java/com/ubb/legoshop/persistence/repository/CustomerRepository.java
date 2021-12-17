@@ -24,6 +24,7 @@ public class CustomerRepository implements AbstractRepository<Customer> {
     private CustomerMapper customerMapper;
 
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM customer WHERE customer_id = :customer_id";
+    private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM customer WHERE email = :email";
 
     @Override
     public Customer getById(Long id) {
@@ -48,5 +49,14 @@ public class CustomerRepository implements AbstractRepository<Customer> {
     @Override
     public void delete(Customer entity) {
 
+    }
+
+    public Customer getByEmail(String email) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, parameterSource, customerMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }
