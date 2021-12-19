@@ -109,14 +109,14 @@ public class TransactionManager {
         locks.add(lock);
     }
 
-    private void rollbackTransaction(Transaction transaction, int lastExecutedOpIndex) {
+    public void rollbackTransaction(Transaction transaction, int lastExecutedOpIndex) {
         for (int i = lastExecutedOpIndex; i >= 0; i--) {
             transaction.getOperations().get(lastExecutedOpIndex).executeCompensation();
         }
         releaseLocks(transaction);
     }
 
-    private void releaseLocks(Transaction transaction) {
+    public void releaseLocks(Transaction transaction) {
         synchronized(locks) {
             for (Lock lock : locks) {
                 lock.getTransactionHasLockIds().remove(transaction.getUuid());

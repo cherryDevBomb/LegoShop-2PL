@@ -15,6 +15,7 @@ public class DirectedGraph {
     }
 
     public void addEdge(String sourceNode, String destNode) {
+        addNodeIfNotPresent(destNode);
         graphMap.get(sourceNode).add(destNode);
     }
 
@@ -43,10 +44,10 @@ public class DirectedGraph {
 
     private boolean isCyclicUtil(String node, Map<String, Boolean> visited, Map<String, Boolean> recStack) {
         // Mark the current node as visited and part of recursion stack
-        if (recStack.get(node)) {
+        if (recStack.get(node) != null && recStack.get(node)) {
             return true;
         }
-        if (visited.get(node)) {
+        if (visited.get(node) != null && visited.get(node)) {
             return false;
         }
 
