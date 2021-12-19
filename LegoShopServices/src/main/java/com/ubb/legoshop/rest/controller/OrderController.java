@@ -1,6 +1,7 @@
 package com.ubb.legoshop.rest.controller;
 
 import com.ubb.legoshop.persistence.domain.Order;
+import com.ubb.legoshop.rest.model.OrderResponseModel;
 import com.ubb.legoshop.scheduler.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +40,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllProducts(@RequestParam Long customerId) {
+    public ResponseEntity<List<OrderResponseModel>> getAllProducts(@RequestParam Long customerId) {
         try {
-            List<Order> result = orderService.getOrdersForCustomer(customerId);
+            List<OrderResponseModel> result = orderService.getOrdersForCustomer(customerId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

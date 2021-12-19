@@ -5,6 +5,7 @@ import com.ubb.legoshop.persistence.domain.Order;
 import com.ubb.legoshop.persistence.repository.CustomerRepository;
 import com.ubb.legoshop.persistence.repository.LegoSetRepository;
 import com.ubb.legoshop.persistence.repository.OrderRepository;
+import com.ubb.legoshop.rest.model.OrderResponseModel;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.*;
@@ -88,7 +89,7 @@ public class OrderService {
         serviceHelper.sendTransactionToScheduler(transaction);
     }
 
-    public List<Order> getOrdersForCustomer(Long customerId) {
+    public List<OrderResponseModel> getOrdersForCustomer(Long customerId) {
         // define the operations that will be part of the transaction
         GetOrdersForCustomerOperation getOrdersForCustomerOp = new GetOrdersForCustomerOperation();
         getOrdersForCustomerOp.setRepository(orderRepository);

@@ -2,6 +2,8 @@ package com.ubb.legoshop.persistence.repository;
 
 import com.ubb.legoshop.persistence.domain.Order;
 import com.ubb.legoshop.persistence.mapper.OrderMapper;
+import com.ubb.legoshop.persistence.mapper.OrderResponseMapper;
+import com.ubb.legoshop.rest.model.OrderResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,10 +27,13 @@ public class OrderRepository implements AbstractRepository<Order> {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private OrderResponseMapper orderResponseMapper;
+
     private final static String INSERT_QUERY = "INSERT INTO orders(customer_id, legoset_id, created_date) VALUES (:customer_id, :legoset_id, :created_date)";
     private static final String DELETE_QUERY = "DELETE FROM orders WHERE id = :id";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM orders WHERE id = :id";
-    private static final String FIND_ALL_BY_CUSTOMER_ID_QUERY = "SELECT * FROM orders WHERE customer_id = :customer_id";
+    private static final String FIND_ALL_BY_CUSTOMER_ID_QUERY = "SELECT * FROM orders INNER JOIN legoset on orders.legoset_id = legoset.id WHERE customer_id = :customer_id";
 
     @Override
     public Order getById(Long id) {
@@ -59,9 +64,9 @@ public class OrderRepository implements AbstractRepository<Order> {
         jdbcTemplate.update(DELETE_QUERY, parameterSource);
     }
 
-    public List<Order> getAllByCustomerId(Long customerId) {
+    public List<OrderResponseModel> getAllByCustomerId(Long customerId) {
         SqlParameterSource parameterSource = new MapSqlParameterSource("customer_id", customerId);
-        return jdbcTemplate.query(FIND_ALL_BY_CUSTOMER_ID_QUERY, parameterSource, orderMapper);
+        return jdbcTemplate.query(FIND_ALL_BY_CUSTOMER_ID_QUERY, parameterSource, orderResponseMapper);
     }
 
     private SqlParameterSource getSqlParameterSourceForEntity(Order order) {
