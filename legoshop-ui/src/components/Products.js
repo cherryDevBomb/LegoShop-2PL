@@ -7,10 +7,10 @@ class Products extends React.Component {
   render() {
     return (
       <Header as='h2' color='blue' textAlign='center'>
-        Sign up
+        Products
       </Header>
     )
   }
 }
 
-export default LoginPage;
+export default Products;

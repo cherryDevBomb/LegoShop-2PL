@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Button, Form, Grid, Header, Segment} from 'semantic-ui-react'
-import {login} from "../util/api";
+import {login, signup} from "../util/api";
 import {setUserOnSession} from "../util/sessionUtil";
 
 class SignUp extends React.Component {
@@ -8,6 +8,8 @@ class SignUp extends React.Component {
     super(props);
 
     this.state = {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
     }
@@ -16,20 +18,13 @@ class SignUp extends React.Component {
   handleChange = (e) => this.setState({[e.target.name]: e.target.value});
 
   handleSubmit = (e) => {
-    login(this.state.email, this.state.password)
+    signup(this.state.firstName, this.state.lastName, this.state.email, this.state.password)
       .then((responseBody) => {
-        setUserOnSession(responseBody);
-        this.props.history.push("/products");
+        this.props.redirect("/");
       }).catch(function (e) {
       console.log(e);
     });
   };
-
-  // handleClick(albumId) {
-  //   this.setState({
-  //     albumId: albumId
-  //   });
-  // }
 
   render() {
     return (
@@ -41,6 +36,18 @@ class SignUp extends React.Component {
             </Header>
             <Form size='large'>
               <Segment stacked>
+                <Form.Input fluid
+                            name="firstName"
+                            placeholder='First Name'
+                            value={this.state.firstName}
+                            onChange={this.handleChange}
+                />
+                <Form.Input fluid
+                            name="lastName"
+                            placeholder='Last Name'
+                            value={this.state.lastName}
+                            onChange={this.handleChange}
+                />
                 <Form.Input fluid
                             name="email"
                             placeholder='E-mail address'
@@ -55,7 +62,7 @@ class SignUp extends React.Component {
                             onChange={this.handleChange}
                 />
                 <Button color="blue" fluid size='large' onClick={(e) => this.handleSubmit(e)}>
-                  Login
+                  Sign up
                 </Button>
               </Segment>
             </Form>

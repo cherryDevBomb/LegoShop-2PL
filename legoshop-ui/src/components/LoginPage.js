@@ -57,7 +57,7 @@ class LoginPage extends React.Component {
                 </Button>
               </Segment>
             </Form>
-            <Button fluid size='large' onClick={(e) => this.handleSignInClick(e)}>
+            <Button fluid basic size='large' onClick={(e) => this.handleSignInClick(e)}>
               Sign up
             </Button>
           </Grid.Column>
