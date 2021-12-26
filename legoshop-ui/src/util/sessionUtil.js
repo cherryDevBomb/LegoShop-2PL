@@ -5,12 +5,11 @@ export const setUserOnSession = (user) => {
 };
 
 export const getLoggedUser = () => {
-  return JSON.parse(sessionStorage.user);
-
+  return sessionStorage.user ? JSON.parse(sessionStorage.user) : null;
 };
 
 export const getLoggedUserId = () => {
-  const parsedUser = JSON.parse(sessionStorage.user);
+  const parsedUser = getLoggedUser();
   return parsedUser ? parsedUser.customerId : null;
 };
 

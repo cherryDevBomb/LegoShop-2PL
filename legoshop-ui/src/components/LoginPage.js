@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Form, Grid, Header, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Header, Message, Segment} from 'semantic-ui-react'
 import {login} from "../util/api";
 import {setUserOnSession} from "../util/sessionUtil";
 
@@ -10,6 +10,7 @@ class LoginPage extends React.Component {
     this.state = {
       email: "",
       password: "",
+      errorVisible: false
     }
   }
 
@@ -20,8 +21,12 @@ class LoginPage extends React.Component {
       .then((responseBody) => {
         setUserOnSession(responseBody);
         this.props.redirect("/products");
-      }).catch(function (e) {
+      }).catch(e => {
       console.log(e);
+      this.setState({ errorVisible: true })
+      setTimeout(() => {
+        this.setState({ errorVisible: false })
+      }, 6000)
     });
   };
 
@@ -62,6 +67,7 @@ class LoginPage extends React.Component {
             </Button>
           </Grid.Column>
         </Grid>
+          {this.state.errorVisible && <Message negative header='Login failed'/>}
       </React.Fragment>
     );
   }

@@ -40,7 +40,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseModel>> getAllProducts(@RequestParam Long customerId) {
+    public ResponseEntity<List<OrderResponseModel>> getAllOrders(@RequestParam Long customerId) {
         try {
             List<OrderResponseModel> result = orderService.getOrdersForCustomer(customerId);
             return ResponseEntity.ok(result);
