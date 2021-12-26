@@ -94,3 +94,46 @@ export const addOrder = (customerId, legosetId) => {
     }
   });
 };
+
+export const deleteOrder = (orderId, customerId, legosetId) => {
+  const url = new URL(BASE_PATH + ORDERS_PATH);
+
+  const requestBody = {
+    "id": orderId,
+    "customerId": customerId,
+    "legoSetId": legosetId
+  }
+
+  return fetch(url, {
+    method: "DELETE",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestBody)
+  }).then((response) => {
+    if (response.status == 204) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject("Delete order failed");
+    }
+  });
+};
+
+export const getAllOrders = (customerId) => {
+  const url = new URL(BASE_PATH + ORDERS_PATH + "?customerId=" + customerId);
+
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.status == 200) {
+      return response.json();
+    } else {
+      return Promise.reject("Get orders failed");
+    }
+  });
+};

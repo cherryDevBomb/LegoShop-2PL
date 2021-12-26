@@ -5,6 +5,7 @@ import LoginPage from "./components/LoginPage";
 import {getLoggedUser, logoutUser} from "./util/sessionUtil";
 import SignUp from "./components/SignUp";
 import Products from "./components/Products";
+import Orders from "./components/Orders";
 
 export default function App() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function App() {
         <Route exact path={"/"} element={<LoginPage redirect={navigate}/>}/>
         <Route exact path={"/sign-up"} element={<SignUp redirect={navigate}/>}/>
         <Route exact path={"/products"} element={<Products redirect={navigate}/>}/>
+        <Route exact path={"/orders"} element={<Orders redirect={navigate}/>}/>
       </Routes>
     </React.Fragment>
   );

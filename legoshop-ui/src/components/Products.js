@@ -32,13 +32,14 @@ class Products extends React.Component {
         this.setState({messageVisible: true})
         setTimeout(() => {
           this.setState({messageVisible: false})
-        }, 6000)
+        }, 6000);
+        this.getProducts();
       }).catch(e => {
       console.log(e);
       this.setState({errorVisible: true})
       setTimeout(() => {
         this.setState({errorVisible: false})
-      }, 6000)
+      }, 6000);
     });
   };
 
@@ -52,7 +53,7 @@ class Products extends React.Component {
                 <Card>
                   <Card.Content>
                     <Card.Header>{legoset.setName}</Card.Header>
-                    <Card.Meta>{legoset.uniqueSetId}</Card.Meta>
+                    <Card.Meta>Code {legoset.uniqueSetId}</Card.Meta>
                     <Card.Description>
                       <p>Category: {legoset.category}</p>
                       <Icon name='puzzle piece'/> {legoset.piecesCount} pieces
@@ -71,8 +72,8 @@ class Products extends React.Component {
           })}
         </Card.Group>
         <div className="bottom-stuff">
-            {this.state.messageVisible && <Message className="bottom" header='Order added'/>}
-            {this.state.errorVisible && <Message className="bottom" header='Error adding order'/>}
+          {this.state.messageVisible && <Message positive className="bottom" header='Order added'/>}
+          {this.state.errorVisible && <Message negative className="bottom" header='Error adding order'/>}
         </div>
       </React.Fragment>
     )

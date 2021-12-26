@@ -19,6 +19,7 @@ code {
 
 .card {
   margin-left: 1.5em !important;
+  margin-bottom: 1.5em !important;
 }
 
 .message {
@@ -26,10 +27,10 @@ code {
   margin-right: 5em !important;
 }
 
-/*.bottom-stuff {*/
-/*  position: relative;*/
-/*}*/
+.bottom-stuff {
+  position: relative;
+}
 
-/*.bottom{*/
-/*  position: absolute; bottom: 0px;*/
-/*}*/
+.bottom{
+  position: absolute; bottom: 0px;
+}
