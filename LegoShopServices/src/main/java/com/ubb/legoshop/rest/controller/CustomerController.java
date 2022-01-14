@@ -3,17 +3,17 @@ package com.ubb.legoshop.rest.controller;
 import com.ubb.legoshop.persistence.domain.Customer;
 import com.ubb.legoshop.rest.model.LoginRequestModel;
 import com.ubb.legoshop.scheduler.service.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/customers")
+@RequiredArgsConstructor
 public class CustomerController {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {

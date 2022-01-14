@@ -6,17 +6,15 @@ import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.FindCustomerByEmailOperation;
 import com.ubb.legoshop.scheduler.model.operation.InsertOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-    @Autowired
-    private ServiceHelper serviceHelper;
-
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final ServiceHelper serviceHelper;
+    private final CustomerRepository customerRepository;
 
     public Customer createCustomer(Customer customer) {
         // define the operations that will be part of the transaction

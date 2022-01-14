@@ -9,25 +9,19 @@ import com.ubb.legoshop.rest.model.OrderResponseModel;
 import com.ubb.legoshop.scheduler.model.enums.Table;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private ServiceHelper serviceHelper;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private LegoSetRepository legoSetRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final ServiceHelper serviceHelper;
+    private final OrderRepository orderRepository;
+    private final LegoSetRepository legoSetRepository;
+    private final CustomerRepository customerRepository;
 
     public Order createOrder(Order order) {
         // define the operations that will be part of the transaction

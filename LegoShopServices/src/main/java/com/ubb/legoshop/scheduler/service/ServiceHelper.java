@@ -3,14 +3,14 @@ package com.ubb.legoshop.scheduler.service;
 import com.ubb.legoshop.scheduler.TransactionManager;
 import com.ubb.legoshop.scheduler.model.enums.TransactionStatus;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ServiceHelper {
 
-    @Autowired
-    private TransactionManager transactionManager;
+    private final TransactionManager transactionManager;
 
     // send transaction to scheduler for execution
     // retry until transaction is committed, or status is error

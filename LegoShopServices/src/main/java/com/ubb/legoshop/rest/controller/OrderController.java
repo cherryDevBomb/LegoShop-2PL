@@ -3,7 +3,7 @@ package com.ubb.legoshop.rest.controller;
 import com.ubb.legoshop.persistence.domain.Order;
 import com.ubb.legoshop.rest.model.OrderResponseModel;
 import com.ubb.legoshop.scheduler.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +13,10 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {

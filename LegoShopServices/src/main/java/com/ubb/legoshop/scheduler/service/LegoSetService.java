@@ -4,19 +4,17 @@ import com.ubb.legoshop.persistence.domain.LegoSet;
 import com.ubb.legoshop.persistence.repository.LegoSetRepository;
 import com.ubb.legoshop.scheduler.model.management.Transaction;
 import com.ubb.legoshop.scheduler.model.operation.GetAllProductsOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LegoSetService {
 
-    @Autowired
-    private ServiceHelper serviceHelper;
-
-    @Autowired
-    private LegoSetRepository legoSetRepository;
+    private final ServiceHelper serviceHelper;
+    private final LegoSetRepository legoSetRepository;
 
     public List<LegoSet> getAllProducts() {
         // define the operations that will be part of the transaction
