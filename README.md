@@ -1,5 +1,5 @@
 ## LegoShop
-🏗 2PL (2-Phase Locking) scheduler for distributed transactional management in an eCommerce application
+🔒 2PL (2-Phase Locking) scheduler for distributed transactional management in an eCommerce application
 
 ### Supported features
 * implements 2PL concurrency control algorithm, producing a conflict serializable schedule.
